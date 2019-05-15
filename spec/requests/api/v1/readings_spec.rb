@@ -45,12 +45,19 @@ describe "Readings API", :type => :request do
 
   context "When the api receives a POST request from a thermostat" do
     it 'returns a json containing the sequence number for the given houshold' do
-      FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
+      thermostat = FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
 
       post api_v1_readings_path, params: { household_token: 'abc', temperature: 17.1, humidity: 70.3, battery_charge: 50.5 }
 
       result = JSON.parse(response.body)
       expect(result["number"]).to eq(1)
+
+      last_reading = Reading.last
+      expect(last_reading.number).to eq(1)
+      expect(last_reading.thermostat).to eq(thermostat)
+      expect(last_reading.temperature).to eq(17.1)
+      expect(last_reading.humidity).to eq(70.3)
+      expect(last_reading.battery_charge).to eq(50.5)
     end
   end
 
@@ -58,8 +65,9 @@ describe "Readings API", :type => :request do
     it 'returns a json containing the reading record for the given reading_id and household_token' do
       thermostat = FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
       FactoryBot.create(:reading, thermostat: thermostat, temperature: 17.1, humidity: 70.3, battery_charge: 50.5, number: 1)
+      FactoryBot.create(:reading, thermostat: thermostat, temperature: 17.2, humidity: 71.3, battery_charge: 50.0, number: 2)
 
-      get '/api/v1/readings', params: { household_token: 'abc', reading_id: 1 }
+      get api_v1_readings_path, params: { household_token: 'abc', reading_id: 1 }
 
       result = JSON.parse(response.body)
       expect(result).to match([{ "temperature" => "17.1", "humidity" => "70.3", "battery_charge" => "50.5" }])
