@@ -41,7 +41,7 @@ RSpec.describe "Readings API", :type => :request do
     it 'returns a json containing the sequence number for the given houshold' do
       thermostat = FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
 
-      post api_v1_readings_path, params: { household_token: 'abc', temperature: 17.1, humidity: 70.3, battery_charge: 50.5 }
+      post api_v1_readings_path, params: { "household_token" => 'abc', "temperature" => 17.1, "humidity" => 70.3, "battery_charge" => 50.5 }
 
       result = JSON.parse(response.body)
 
@@ -57,10 +57,21 @@ RSpec.describe "Readings API", :type => :request do
       expect(last_reading.battery_charge).to eq(50.5)
 
       # Checks the statistics are calculated for the request sent
-      expect(JSON.parse($redis.get('abc'))).to match({"temperature" => {"min" => 17.1, "max" => 17.1, "avg" => 17.1},
-                             "humidity" => {"min" => 70.3, "max" => 70.3, "avg" => 70.3},
-                             "battery_charge" => {"min" => 50.5, "max" => 50.5, "avg" => 50.5}
-                            })
+      thermostat.reload
+      expect(thermostat.total_readings.value).to eq(1)
+
+      expect(thermostat.current_temperature.value).to eq("17.1")
+      expect(thermostat.min_temperature.value).to eq("17.1")
+      expect(thermostat.max_temperature.value).to eq("17.1")
+      expect(thermostat.sum_temperature.value).to eq("17.1")
+
+      expect(thermostat.current_humidity.value).to eq("70.3")
+      expect(thermostat.max_humidity.value).to eq("70.3")
+      expect(thermostat.sum_humidity.value).to eq("70.3")
+
+      expect(thermostat.current_battery_charge.value).to eq("50.5")
+      expect(thermostat.max_battery_charge.value).to eq("50.5")
+      expect(thermostat.sum_battery_charge.value).to eq("50.5")
     end
   end
 
