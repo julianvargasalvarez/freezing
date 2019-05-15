@@ -152,6 +152,8 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rake (12.3.2)
     redis (4.1.1)
+    redis-objects (1.4.3)
+      redis (~> 4.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.3)
@@ -200,6 +202,7 @@ DEPENDENCIES
   puma (~> 3.11)
   rails (~> 5.2.3)
   redis (~> 4.0)
+  redis-objects
   rspec-rails (~> 3.8)
   shoulda-matchers!
 
