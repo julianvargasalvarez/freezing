@@ -9,7 +9,10 @@ method is consistent in the same way as method 2. For extra points, make it exec
 =end
 RSpec.describe "Stats API", :type => :request do
   it 'returns a json with the statistics for the given househould_token' do
-    thermostat = FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
+    $redis.set('abc', {"temperature" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0},
+                             "humidity" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0},
+                             "battery_charge" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0}
+                            }.to_json)
 
     get api_v1_stats_path, params: { household_token: 'abc' }
 
