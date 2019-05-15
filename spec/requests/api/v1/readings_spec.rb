@@ -24,7 +24,6 @@ it very frequently and simultaneously. Make it as fast as possible and schedule 
 for writing to the DB (you can use Sidekiq for example).
 The method also returns a generated sequence number starting from 1 and every household has its own sequence. (this is tested in the model)
 
-
 2. GET Reading: returns the thermostat data using the reading_id obtained from POST Reading. The
 API must be consistent, that is if the method 1 returns, the thermostat data must be immediately
 available from this method even if the background job is not yet finished.
@@ -45,14 +44,23 @@ RSpec.describe "Readings API", :type => :request do
       post api_v1_readings_path, params: { household_token: 'abc', temperature: 17.1, humidity: 70.3, battery_charge: 50.5 }
 
       result = JSON.parse(response.body)
+
+      # Checks for the endpoint to return the sequence number
       expect(result["number"]).to eq(1)
 
+      # Checks that the reading record has the proper values sent in the request
       last_reading = Reading.last
       expect(last_reading.number).to eq(1)
       expect(last_reading.thermostat).to eq(thermostat)
       expect(last_reading.temperature).to eq(17.1)
       expect(last_reading.humidity).to eq(70.3)
       expect(last_reading.battery_charge).to eq(50.5)
+
+      # Checks the statistics are calculated for the request sent
+      expect(JSON.parse($redis.get('abc'))).to match({"temperature" => {"min" => 17.1, "max" => 17.1, "avg" => 17.1},
+                             "humidity" => {"min" => 70.3, "max" => 70.3, "avg" => 70.3},
+                             "battery_charge" => {"min" => 50.5, "max" => 50.5, "avg" => 50.5}
+                            })
     end
   end
 
@@ -65,6 +73,8 @@ RSpec.describe "Readings API", :type => :request do
       get api_v1_readings_path, params: { household_token: 'abc', reading_id: 1 }
 
       result = JSON.parse(response.body)
+
+      # Checks the endpoint returs the record sepecified b the reading_id sent in the request
       expect(result).to match({ "temperature" => "17.1", "humidity" => "70.3", "battery_charge" => "50.5" })
     end
   end
