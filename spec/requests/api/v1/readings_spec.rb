@@ -29,19 +29,14 @@ The method also returns a generated sequence number starting from 1 and every ho
 API must be consistent, that is if the method 1 returns, the thermostat data must be immediately
 available from this method even if the background job is not yet finished.
 
-
-3. GET Stats: gives the average, minimum and maximum by temperature, humidity and
-battery_charge in a particular thermostat across all the period of time. Again, make sure this
-method is consistent in the same way as method 2. For extra points, make it execute in O(1) time.
-
-
 For simplicity, you can seed the DB with different thermostats containing household tokens and
 locations. Make sure your code is properly tested with RSpec as well. You can use any tools and
 gems to build and optimize your API. For extra points, handle bad requests with a JSON error
 message and a non success response code.
+
 =end
 
-describe "Readings API", :type => :request do
+RSpec.describe "Readings API", :type => :request do
 
   context "When the api receives a POST request from a thermostat" do
     it 'returns a json containing the sequence number for the given houshold' do
