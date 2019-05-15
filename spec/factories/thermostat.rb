@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :thermostat do
     household_token { "abcd" }
-    locations { "Somewhere" }
+    location { "Somewhere" }
   end
 end

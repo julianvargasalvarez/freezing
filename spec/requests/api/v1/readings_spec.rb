@@ -47,10 +47,10 @@ describe "Readings API", :type => :request do
     it 'returns a json containing the sequence number for the given houshold' do
       FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
 
-      post '/api/v1/readings', params: { household_token: 'abc', temperature: 17.1, humidity: 70.3, battery_charge: 50.5 }
+      post api_v1_readings_path, params: { household_token: 'abc', temperature: 17.1, humidity: 70.3, battery_charge: 50.5 }
 
-      response = JSON.parse(response.body)
-      expect(response.number).to eq(1)
+      result = JSON.parse(response.body)
+      expect(result["number"]).to eq(1)
     end
   end
 
