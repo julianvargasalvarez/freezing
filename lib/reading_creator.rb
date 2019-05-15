@@ -11,7 +11,7 @@ class ReadingCreator
     thermostat = Thermostat.find_by(household_token: reading_params["household_token"])
     thermostat.total_readings.increment
 
-    household_token, temperature, humidity, battery_charge = reading_params.slice("household_token", "temperature", "humidity", "battery_charge").values
+    household_token, temperature, humidity, battery_charge = reading_params.slice("household_token", "temperature", "humidity", "battery_charge").values.map(&:to_f)
 
     thermostat.current_temperature.value = temperature
     thermostat.min_temperature.value = [thermostat.min_temperature.value.to_f, temperature].min
