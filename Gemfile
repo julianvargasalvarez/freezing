@@ -17,3 +17,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'database_cleaner'
 end
+
+group :test do
+  gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
+end

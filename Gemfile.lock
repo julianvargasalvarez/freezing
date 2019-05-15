@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/thoughtbot/shoulda-matchers.git
+  revision: 4b160bd19ecca7f97d7ac22dccd5fde9b0da5a9f
+  branch: rails-5
+  specs:
+    shoulda-matchers (3.1.2)
+      activesupport (>= 4.2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -193,6 +201,7 @@ DEPENDENCIES
   rails (~> 5.2.3)
   redis (~> 4.0)
   rspec-rails (~> 3.8)
+  shoulda-matchers!
 
 RUBY VERSION
    ruby 2.6.0p0
