@@ -61,8 +61,8 @@ describe "Readings API", :type => :request do
 
       get '/api/v1/readings', params: { household_token: 'abc', reading_id: 1 }
 
-      response = JSON.parse(response.body)
-      expect(response).to match({ temperature: 17.1, humidity: 70.3, battery_charge: 50.5 })
+      result = JSON.parse(response.body)
+      expect(result).to match([{ "temperature" => "17.1", "humidity" => "70.3", "battery_charge" => "50.5" }])
     end
   end
 end
