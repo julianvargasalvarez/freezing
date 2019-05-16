@@ -3,6 +3,8 @@ class Thermostat < ApplicationRecord
   after_create :initialize_stats
 
   has_many :readings
+
+  # These field are stored in Redis for performance
   counter :total_readings
 
   value :current_temperature

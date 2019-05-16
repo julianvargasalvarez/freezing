@@ -6,6 +6,12 @@ class StatsCalculator
   end
 
   def stats
+    # The three variables are sumed up as they are created thus here
+    # we only have to divide the total of each variable by the total
+    # number of readings, in consequence, regardles of the number of
+    # readings, only one operation is performed to calculate the
+    # averages O(1)
+
     thermostat = Thermostat.find_by(household_token: household_token)
     total_readings = thermostat.total_readings.to_f
 
