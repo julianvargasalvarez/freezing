@@ -5,6 +5,8 @@ class Thermostat < ApplicationRecord
   has_many :readings
 
   # These field are stored in Redis for performance
+  redis_id_field :household_token
+
   counter :total_readings
 
   value :current_temperature
@@ -24,6 +26,7 @@ class Thermostat < ApplicationRecord
 
   private
   def initialize_stats
+    self.total_readings.value = 0
     self.current_temperature.value = 0.0
     self.min_temperature.value = 1000.0
     self.max_temperature.value =    0.0
