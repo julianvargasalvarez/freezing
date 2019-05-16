@@ -6,8 +6,6 @@ class ReadingCreator
   end
 
   def create
-    reading_attributes = reading_params.except("household_token")
-
     thermostat = Thermostat.find_by(household_token: reading_params["household_token"])
     thermostat.total_readings.increment
 
@@ -29,7 +27,7 @@ class ReadingCreator
     thermostat.sum_battery_charge.value = thermostat.sum_battery_charge.value.to_f + battery_charge
 
     # This one goes to the background job
-    thermostat.readings.create!(reading_attributes.merge({number: thermostat.total_readings.value.to_i}))
+    ReadingSaverJob.perform_later(reading_params.merge({number: thermostat.total_readings.value.to_i}).to_hash)
 
     {number: thermostat.total_readings.value}
   end

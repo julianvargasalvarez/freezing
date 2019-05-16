@@ -41,20 +41,14 @@ RSpec.describe "Readings API", :type => :request do
     it 'returns a json containing the sequence number for the given houshold' do
       thermostat = FactoryBot.create(:thermostat, household_token: 'abc', location: 'Mitte')
 
+      expect(ReadingSaverJob).to receive(:perform_later).with({ "household_token" => 'abc', "temperature" => "17.1", "humidity" => "70.3", "battery_charge" => "50.5", "number" => 1 })
+
       post api_v1_readings_path, params: { "household_token" => 'abc', "temperature" => 17.1, "humidity" => 70.3, "battery_charge" => 50.5 }
 
       result = JSON.parse(response.body)
 
       # Checks for the endpoint to return the sequence number
       expect(result["number"]).to eq(1)
-
-      # Checks that the reading record has the proper values sent in the request
-      last_reading = Reading.last
-      expect(last_reading.number).to eq(1)
-      expect(last_reading.thermostat).to eq(thermostat)
-      expect(last_reading.temperature).to eq(17.1)
-      expect(last_reading.humidity).to eq(70.3)
-      expect(last_reading.battery_charge).to eq(50.5)
 
       # Checks the statistics are calculated for the request sent
       thermostat.reload
