@@ -1,26 +1,36 @@
 # README
 
-`rails new . --database=postgresql --api --skip-test --skip-spring --skip-listen --skip-bundle`
+The projects uses Docker and Compose, to setup follow these steps:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```bash
+sudo docker-compose run web bundle
+sudo docker-compose run web bundle exec rails db:drop db:create db:migrate db:seed
+```
 
-Things you may want to cover:
+To run the specs:
+```bash
+sudo docker-compose run web bundle exec rspec spec
+```
 
-* Ruby version
+To run the app in development mode:
+```bash
+sudo docker-compose up
+```
 
-* System dependencies
+To test each endpoint from the terminal:
+```bash
 
-* Configuration
+# Creates a Reading entry
+curl -XPOST -H "Content-Type: application/json" http://localhost:3000/api/v1/readings -d ' { "household_token": "abc-1", "temperature": "17.1", "humidity": "70.3", "battery_charge": "50.5" } '
 
-* Database creation
+# Retrieves a particular reading entry
+curl -XGET -H "Content-Type: application/json" http://localhost:3000/api/v1/readings -d ' { "household_token": "abc-1", "reading_id":1 } '
 
-* Database initialization
+# Retrieves the statistics for a given token
+curl -XGET -H "Content-Type: application/json" http://localhost:3000/api/v1/stats -d ' { "household_token": "abc-1" } '
+```
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+To perform a stress test of the api:
+```bash
+source dummy_data.sh
+```

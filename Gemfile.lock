@@ -122,7 +122,6 @@ GEM
     protocol-http2 (0.2.1)
       protocol-hpack (~> 1.0)
       protocol-http (~> 0.2)
-    puma (3.12.1)
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -199,7 +198,6 @@ DEPENDENCIES
   factory_bot_rails
   falcon
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
   rails (~> 5.2.3)
   redis (~> 4.0)
   redis-objects
