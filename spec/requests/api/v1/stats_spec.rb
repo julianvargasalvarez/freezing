@@ -1,25 +1,16 @@
 require 'rails_helper'
 
-=begin
-
-3. GET Stats: gives the average, minimum and maximum by temperature, humidity and
-battery_charge in a particular thermostat across all the period of time. Again, make sure this
-method is consistent in the same way as method 2. For extra points, make it execute in O(1) time.
-
-=end
 RSpec.describe "Stats API", :type => :request do
   it 'returns a json with the statistics for the given househould_token' do
-    $redis.set('abc', {"temperature" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0},
-                             "humidity" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0},
-                             "battery_charge" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0}
-                            }.to_json)
+    thermostat = Thermostat.create(household_token: 'abc')
+    ReadingCreator.new({ "household_token" => 'abc', "temperature" => "17.0", "humidity" => "70.0", "battery_charge" => "49.0" }).create
 
     get api_v1_stats_path, params: { household_token: 'abc' }
 
     result = JSON.parse(response.body)
-    expect(result).to match({"temperature" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0},
-                             "humidity" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0},
-                             "battery_charge" => {"min" => 0.0, "max" => "0.0", "avg" => 0.0}
+    expect(result).to match({"temperature"    => {"min"=>17.0, "max"=>17.0, "avg"=>17.0},
+                             "humidity"       => {"min"=>70.0, "max"=>70.0, "avg"=>70.0},
+                             "battery_charge" => {"min"=>49.0, "max"=>49.0, "avg"=>49.0}
                             })
   end
 end

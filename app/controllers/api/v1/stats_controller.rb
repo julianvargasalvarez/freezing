@@ -1,5 +1,6 @@
 class  Api::V1::StatsController < ApplicationController
   def index
-    render json: JSON.parse($redis.get(params["household_token"])), status: :ok
+    result = StatsCalculator.new(params["household_token"]).stats
+    render json: result, status: :ok
   end
 end
